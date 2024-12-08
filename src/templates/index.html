@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ML Prediction App</title>
+</head>
+
+<h1>Prédiction de rendement de SCPI</h1>
+
+<body>
+    
+    <form method="post" action="/predict">
+
+
+<span style="font-style: italic;">Les SCPI sont des sociétés de placement immobilier et cet IA permet d'estimer le rendement futur de l'année suivante en fonction de diverses données. Veuillez alors renseigner les paramètres suivants :</span><br>
+
+</label>
+
+<div class="input-output-container">
+    <label for="pct_distrib_2018">Rendement 2020 : </label>
+    <input type="range" name="pct_distrib_2018" min="0" max="10" step="0.1" required value="{% if request.method == 'POST' %}{{ request.form['pct_distrib_2018'] }}{% else %}4.5{% endif %}" oninput="updateOutput1(this.value)"><br>
+    <output class="pct_distrib_2018-output" id="pct_distrib_2018-output" for="pct_distrib_2018"> {% if request.method == 'POST' %}{{ request.form['pct_distrib_2018'] }}{% else %}4.5{% endif %}%</output>
+</div>
+
+<div class="input-output-container">		
+    <label for="pct_distrib_2019">Rendement 2021 : </label>
+    <input type="range" name="pct_distrib_2019" min="0" max="10" step="0.1" required value="{% if request.method == 'POST' %}{{ request.form['pct_distrib_2019'] }}{% else %}4.9{% endif %}" oninput="updateOutput2(this.value)"><br>
+    <output class="pct_distrib_2019-output" id="pct_distrib_2019-output" for="pct_distrib_2019"> {% if request.method == 'POST' %}{{ request.form['pct_distrib_2019'] }}{% else %}4.9{% endif %}%</output>
+</div>
+
+<div class="input-output-container">
+    <label for="pct_distrib_2020">Rendement 2022 : </label>
+    <input type="range" name="pct_distrib_2020" min="0" max="10" step="0.1" required value="{% if request.method == 'POST' %}{{ request.form['pct_distrib_2020'] }}{% else %}4.7{% endif %}" oninput="updateOutput3(this.value)"><br>
+    <output class="pct_distrib_2020-output" id="pct_distrib_2020-output" for="pct_distrib_2020"> {% if request.method == 'POST' %}{{ request.form['pct_distrib_2020'] }}{% else %}4.7{% endif %}%</output>
+</div>
+
+<div class="input-output-container">		
+    <label for="pct_distrib_2021">Rendement 2023 : </label>
+    <input type="range" name="pct_distrib_2021" min="0" max="10" step="0.1" required value="{% if request.method == 'POST' %}{{ request.form['pct_distrib_2021'] }}{% else %}5.1{% endif %}" oninput="updateOutput4(this.value)"><br>
+    <output class="pct_distrib_2021-output" id="pct_distrib_2021-output" for="pct_distrib_2021"> {% if request.method == 'POST' %}{{ request.form['pct_distrib_2021'] }}{% else %}5.1{% endif %}%</output>
+</div>
+
+<style>
+.input-output-container {
+ display: flex;
+  align-items: center; /* Aligner les éléments verticalement */
+}
+
+/* Ajouter un peu d'espace entre l'input et l'output */
+.input-output-container label {
+  margin-right: 10px;
+}
+</style>
+
+
+
+<script>
+function updateOutput0(value) {
+  var output = document.getElementById("pct_charge-output");  // Sélectionner l'élément <output> par son id
+  output.textContent = value + "%";  // Mettre à jour le contenu de l'élément <output> avec la valeur sélectionnée
+}
+function updateOutput1(value) {
+  var output = document.getElementById("pct_distrib_2018-output");  // Sélectionner l'élément <output> par son id
+  output.textContent = value + "%";  // Mettre à jour le contenu de l'élément <output> avec la valeur sélectionnée
+}
+function updateOutput2(value) {
+  var output = document.getElementById("pct_distrib_2019-output");  // Sélectionner l'élément <output> par son id
+  output.textContent = value + "%";  // Mettre à jour le contenu de l'élément <output> avec la valeur sélectionnée
+}
+
+function updateOutput3(value) {
+  var output = document.getElementById("pct_distrib_2020-output");  // Sélectionner l'élément <output> par son id
+  output.textContent = value + "%";  // Mettre à jour le contenu de l'élément <output> avec la valeur sélectionnée
+}
+function updateOutput4(value) {
+  var output = document.getElementById("pct_distrib_2021-output");  // Sélectionner l'élément <output> par son id
+  output.textContent = value + "%";  // Mettre à jour le contenu de l'élément <output> avec la valeur sélectionnée
+}
+</script>
+
+        <!-- Ajoutez les autres champs de saisie ici -->
+
+        <label for="capital">Capital fixe/variable:</label>
+		<select style="width: 50%;" name="capital" required>
+			<option value="Fixe" {% if request.method == 'POST' and request.form['capital'] == 'Fixe' %} selected {% endif %}>Fixe</option>
+			<option value="Variable" {% if request.method == 'POST' and request.form['capital'] == 'Variable' %} selected {% endif %}>Variable</option>
+		</select><br>
+
+        <label for="categorie">Catégorie:</label>
+        <select style="width: 50%;" name="categorie" required>
+			<option value="Activités / Logistique" {% if request.method == 'POST' and request.form['categorie'] == 'Activités / Logistique' %} selected {% endif %}>Activités / Logistique</option>
+			<option value="Bureaux" {% if request.method == 'POST' and request.form['categorie'] == 'Bureaux' %} selected {% endif %}>Bureaux</option>
+			<option value="Commerce" {% if request.method == 'POST' and request.form['categorie'] == 'Commerce' %} selected {% endif %}>Commerce</option>
+			<option value="Diversifiée" {% if request.method == 'POST' and request.form['categorie'] == 'Diversifiée' %} selected {% endif %}>Diversifiée</option>
+			<option value="Résidentiel" {% if request.method == 'POST' and request.form['categorie'] == 'Résidentiel' %} selected {% endif %}>Résidentiel</option>
+			<option value="Santé et éducation" {% if request.method == 'POST' and request.form['categorie'] == 'Santé et éducation' %} selected {% endif %}>Santé et éducation</option>
+			<option value="Tourisme et loisirs" {% if request.method == 'POST' and request.form['categorie'] == 'Tourisme et loisirs' %} selected {% endif %}>Tourisme et loisirs</option>
+        </select><br>
+
+        <input style="width: 50%;" type="submit" value="Prédire">
+    </form>
+
+    {% if prediction is defined %}
+        <p>Le rendement de l'année suivante serait de {{ prediction }} %</p>
+    {% endif %}
+</body>
+</html>
+
+<!-- apparences -->
+<!-- background: #D5E9FF; -->
+
+<style>
+
+h1 {
+font-size: 24px;
+font-weight: 150;
+color: white; /* Texte en blanc */
+}
+
+body {
+margin: 0 auto; /* 0 pour le haut/bas, auto pour les côtés pour centrer */
+width: 40%; /* Largeur fixe de la fenêtre du navigateur */
+height: 100vh; /* Hauteur en % de la vue (viewport) */
+color: white; /* Texte en blanc */
+
+#background: linear-gradient(to bottom, #91B9E5, #E3FFED, #fff);
+background: linear-gradient(to bottom, #434861, #4C6C6E);
+display: flex;
+flex-direction: column;
+<!-- align-items: center; -->
+	
+font-family: Montserrat, "sans-serif";
+display: flex;
+justify-content: center;
+#color: #303030;
+color: white; /* Texte en blanc */
+}
+
+form {
+width: 100%;
+display: flex;
+flex-direction: column;
+min-height: 83px;
+margin-top: 25px;
+color: white; /* Texte en blanc */
+}
+
+label {
+margin-bottom: 7px;
+font-weight: 600;
+color: white; /* Texte en blanc */
+}
+
+input {
+height: 20px;
+padding-left: 10px;
+}
+
+option {
+background: white;
+#color: #303030;
+}
+
+</style>
