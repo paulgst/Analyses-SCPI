@@ -3,7 +3,6 @@ import pickle
 
 app = Flask(__name__)
 
-# Chargez votre modèle préenregistré avec Pickle
 with open('/home/pauljg/mysite/modele.pickle', 'rb') as model_file:
     model = pickle.load(model_file)
 
@@ -16,23 +15,19 @@ def index():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Récupérez les variables d'entrée depuis le formulaire
 
     nb_immeubles = 130
     pct_charge = 30
 
-    pct_distrib_2018 = float(request.form['pct_distrib_2018'])
-    pct_distrib_2019 = float(request.form['pct_distrib_2019'])
     pct_distrib_2020 = float(request.form['pct_distrib_2020'])
     pct_distrib_2021 = float(request.form['pct_distrib_2021'])
+    pct_distrib_2022 = float(request.form['pct_distrib_2022'])
+    pct_distrib_2023 = float(request.form['pct_distrib_2023'])
 
-
-
-    variation_prix_2019 = pct_distrib_2019-pct_distrib_2018
-    variation_prix_2020 = pct_distrib_2020-pct_distrib_2019
     variation_prix_2021 = pct_distrib_2021-pct_distrib_2020
-    variation_prix_2018 = (variation_prix_2019+variation_prix_2020+variation_prix_2021)/3
-
+    variation_prix_2022 = pct_distrib_2022-pct_distrib_2021
+    variation_prix_2023 = pct_distrib_2023-pct_distrib_2022
+    variation_prix_2020 = (variation_prix_2021+variation_prix_2022+variation_prix_2023)/3
 
     capital_var = request.form['capital']
 
@@ -71,20 +66,15 @@ def predict():
     else:
         categorie_diversifiee = 1
 
-
-    # Effectuez la prédiction avec votre modèle
-
-
-    X = [[type_SCPI, capital, nb_immeubles, pct_charge, variation_prix_2018, variation_prix_2019,
-                              variation_prix_2020, variation_prix_2021, pct_distrib_2018,
-                              pct_distrib_2019, pct_distrib_2020, pct_distrib_2021, categorie_act_log,categorie_bureaux,categorie_commerce,
+    X = [[type_SCPI, capital, nb_immeubles, pct_charge, variation_prix_2020, variation_prix_2021,
+                              variation_prix_2022, variation_prix_2023, pct_distrib_2020,
+                              pct_distrib_2021, pct_distrib_2022, pct_distrib_2023, categorie_act_log,categorie_bureaux,categorie_commerce,
                              categorie_diversifiee,categorie_residentiel,categorie_sante_education,categorie_tourisme_loisirs]]
 
     X_sc = sc_fit.transform(X)
     prediction = model.predict(X_sc)
 
-
-    # préparation valeurs histo
+    # préparation histogramme
     imposition = float(request.form['imposition'])
     salaire = float(request.form['salaire'])
     epargne = float(request.form['epargne'])
@@ -102,7 +92,6 @@ def predict():
 
     list_bar = [round(element) for element in list_bar]
 
-    # Retournez la prédiction en tant que réponse JSON
     return render_template('index.html', prediction=round(prediction[0], 2),list_bar=list_bar)
 
 if __name__ == '__main__':
