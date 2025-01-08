@@ -7,7 +7,7 @@ def url_to_dataframe(debut_url,list_scpi):
     
     i = 0
 
-    scpi_liste = []#confronter avec list_scpi
+    scpi_liste = []
     type_SCPI = []
     categorie = []
     capital = []
@@ -34,9 +34,8 @@ def url_to_dataframe(debut_url,list_scpi):
 
         url = debut_url + scpi
         i+=1
-        # Envoie une requête GET à l'URL
-        response = requests.get(url)
 
+        response = requests.get(url)
 
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, 'html.parser')
@@ -84,85 +83,81 @@ def url_to_dataframe(debut_url,list_scpi):
             tableau_passage = False
 
             for ligne in text_lines:
-                #print(ligne)
-
 
                 if type_SCPI_flag == 1:
                     type_SCPI_flag = 0
                     type_SCPI_var = ligne
-                    #print("Type",ligne)
+
                 if ligne == 'Type' or ligne == 'Type ':
                     type_SCPI_flag = 1
-                    #print("Type flag",ligne)
 
                 if categorie_flag == 1:
                     categorie_flag = 0
                     categorie_var = ligne
-                    #print("Catégorie",ligne)
-                if (ligne == 'Catégorie' or ligne == 'Catégorie ') and not ':' in ligne :
+
+                if ligne == 'Catégorie' or ligne == 'Catégorie ' and not ':' in ligne :
                     categorie_flag = 1
 
-                    #print("Catégorie flag",ligne)
                 if capital_flag == 1:
                     capital_flag = 0
                     capital_var = ligne
-                    #print("Capital",ligne)
+
                 if ligne == 'Capital':
                     capital_flag = 1
 
                 if creation_flag == 1:
                     creation_flag = 0
                     creation_var = ligne
-                    #print("Création",ligne)
+
                 if (ligne == 'Création' or ligne == 'Création ' )and not ':' in ligne :
                     creation_flag = 1
 
                 if capitalisation_flag == 1:
                     capitalisation_flag = 0
                     capitalisation_var = ligne
-                    #print("Capital",ligne)
+
                 if 'Capitalisation' in ligne and not ':' in ligne  :
                     capitalisation_flag = 1
 
                 if nb_associes_flag == 1:
                     nb_associes_flag = 0
                     nb_associes_var = ligne
-                    #print("Nombre d'associés",ligne)
+
                 if "Nombre d'associés" in ligne and not ':' in ligne  :
                     nb_associes_flag = 1
 
                 if taux_occupation_financier_flag == 1:
                     taux_occupation_financier_flag = 0
                     taux_occupation_financier_var = ligne
-                    #print("Taux d'occupation financier",ligne)
+
                 if "Taux d'occupation financier" in ligne and not ':' in ligne  :
                     taux_occupation_financier_flag = 1
 
                 if nb_immeubles_flag == 1:
                     nb_immeubles_flag = 0
                     nb_immeubles_var = ligne
-                    #print("Nombre d'immeubles",ligne)
+
                 if "Nombre d'immeubles" in ligne and not "/ nombre d'immeubles" in ligne  :
                     nb_immeubles_flag = 1                         
 
                 if RAN_flag == 1:
                     RAN_flag = 0
                     RAN_var = ligne
-                    #print("Nombre d'immeubles",ligne)
+
                 if "RAN en % du dividende" in ligne and not ':' in ligne  :
                     RAN_flag = 1 
 
                 if pct_charge_flag == 1:
                     pct_charge_flag = 0
                     pct_charge_var = ligne
-                    #print("Nombre d'immeubles",ligne)
+
                 if "Pourcentage de charges" in ligne and not ':' in ligne  :
                     pct_charge_flag = 1 
 
 
                 if 'Taux de distribution et variation du prix' in ligne:
                     tableau_passage = True
-                    #print('tableau_passage')
+
                 if tableau_passage == True:
 
                     # Vérifier si la ligne contient une année
@@ -170,15 +165,13 @@ def url_to_dataframe(debut_url,list_scpi):
                         pourcentage_distribution  = None
                         variation_prix  = None
                         annee = int(ligne.strip())
+                        
                     # Vérifier si la ligne contient un pourcentage de distribution
                     elif ligne.strip().endswith('%'):
-                        #pourcentage_distribution = ligne.strip() if pourcentage_distribution is None else None
-                        #variation_prix = ligne.strip() if variation_prix == None and pourcentage_distribution is not None else None
                         if variation_prix == None and pourcentage_distribution is not None:
                             variation_prix = ligne.strip()
                         if pourcentage_distribution is None:
                             pourcentage_distribution = ligne.strip()
-
 
                     if annee is not None and pourcentage_distribution is not None and variation_prix is not None:
 
@@ -207,7 +200,6 @@ def url_to_dataframe(debut_url,list_scpi):
             variation_prix  = None
 
             #on alimente les listes une fois le parcours du texte
-
             scpi_liste.append(scpi)
             type_SCPI.append(type_SCPI_var)
             categorie.append(categorie_var)
@@ -264,16 +256,21 @@ def url_to_dataframe(debut_url,list_scpi):
     return dataframe
     
 def etl():
-    yaml_file = "C:/Users/paulj/Documents/Projets data/SCPI-analyses/SCPI-analyses/config/config.yaml"
-
-    with open(yaml_file, "r") as file:
-        config = yaml.safe_load(file)
-
-    url = config["url"]
-    list_scpi = config["list_scpi"]
-
-    df = url_to_dataframe(url,list_scpi)
-    df.to_excel("df_brut.xlsx")
+    yaml_file = "C:/Users/paulj/Documents/Projets data/SCPI-analyses/SCPI-analyses/config/config.yaml"    
     
+    try:
+        with open(yaml_file, "r") as file:
+            config = yaml.safe_load(file)
+
+        url = config["url"]
+        list_scpi = config["list_scpi"]
+
+        df = url_to_dataframe(url,list_scpi)
+        df.to_excel("df_brut_test.xlsx")
+        print('Fichier Excel créé avec succès')
+        
+    except Exception as e:
+        print(e.message, e.args)
+
 if __name__ == "__main__":
     etl()
