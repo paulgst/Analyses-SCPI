@@ -1,9 +1,5 @@
 url: "https://www.scpi-online.com/scpi/"
 list_scpi:
-  - scpi-notapierre
-  - scpi-corum-origin
-  - allianz-home
-  - corum-xl
   - remake-live
   - novapierre-1
   - laffitte-pierre
@@ -27,7 +23,6 @@ list_scpi:
   - carac-perspectives-immo
   - genepierre
   - fructiregions-europe
-  - atlantique-pierre-1
   - fructipierre
   - france-investipierre
   - scpi-accimmo-pierre
@@ -109,4 +104,9 @@ list_scpi:
   - immo-placement
   - scpi-immo-evolutif
   - scpi-gma-essentialis
-  - scpi-france-investipierre
+  - france-investipierre
+  - eden
+  - epargne-pierre-sophia
+  - kyaneos-de-normandie-4
+  - urban-pierre-6
+  - urban-vitalim-4
